@@ -5,6 +5,7 @@
 #ifndef LABO4_VECTEUR_H
 #define LABO4_VECTEUR_H
 
+template <typename T>
 class Vecteur {
 
 };
