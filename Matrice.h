@@ -5,4 +5,9 @@
 #ifndef LABO4_MATRICE_H
 #define LABO4_MATRICE_H
 
+template <typename T>
+class Matrice {
+
+};
+
 #endif //LABO4_MATRICE_H
