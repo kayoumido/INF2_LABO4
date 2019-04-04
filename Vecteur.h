@@ -10,9 +10,16 @@
 template <typename T> class Vecteur;
 
 template <typename T>
-ostream& operator<<(ostream& os, const Vecteur<T>& v)
+std::ostream& operator<<(std::ostream& os, const Vecteur<T>& v)
 {
-    
+    os << "[";
+    os << v.at(0);
+    for(size_t i=1; i<v.size(); i++)
+    {
+        os << ", " << v.at(1);
+    }
+    os << "]";
+    return os;
 }
 
 template <typename T>
@@ -20,7 +27,7 @@ class Vecteur {
     
 private:
     std::vector<T> data;
-    friend ostream& operator<< <T>(ostream& os, const Vecteur<T>& v);//Robin
+    friend std::ostream& operator<< <T>(std::ostream& os, const Vecteur<T>& v);//Robin
     
 public:
     Vecteur(size_t size);//Doran
