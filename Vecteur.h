@@ -6,8 +6,10 @@
 #define LABO4_VECTEUR_H
 
 #include <vector>
+#include <iostream>
 
-template <typename T> class Vecteur;
+template<typename T>
+class Vecteur;
 
 template <typename T>
 std::ostream& operator<<(std::ostream& os, const Vecteur<T>& v)
@@ -22,28 +24,28 @@ std::ostream& operator<<(std::ostream& os, const Vecteur<T>& v)
     return os;
 }
 
-template <typename T>
+template<typename T>
 class Vecteur {
-    
+
 private:
     std::vector<T> data;
-    friend std::ostream& operator<< <T>(std::ostream& os, const Vecteur<T>& v);//Robin
-    
+
+    friend std::ostream &operator<<<T>(std::ostream &os, const Vecteur<T> &v);//Robin
+
 public:
-    Vecteur(size_t size);//Doran
+    Vecteur(size_t size);
     Vecteur(std::vector<T> v);//Robin
-    T at(size_t pos) const;//Doran
+    T at(size_t pos) const;
     size_t size() const;//Robin
-    void resize(size_t newSize);//Doran
+    void resize(size_t newSize);
     T somme() const;//Robin
-    Vecteur operator+(Vecteur otherVecteur);//Doran
+    Vecteur operator+(Vecteur otherVecteur);
     Vecteur operator-(Vecteur otherVecteur);
-    template <typename U>
+
+    template<typename U>
     Vecteur operator*(U value);//Robin
-    Vecteur operator*(Vecteur otherVecteur);//Doran
-
+    Vecteur operator*(Vecteur otherVecteur);
 };
-
 
 
 #include "Vecteur.cpp.h"
