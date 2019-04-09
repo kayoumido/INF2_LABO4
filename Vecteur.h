@@ -18,7 +18,7 @@ std::ostream& operator<<(std::ostream& os, const Vecteur<T>& v)
     os << v.at(0);
     for(size_t i=1; i<v.size(); i++)
     {
-        os << ", " << v.at(1);
+        os << ", " << v.at(i);
     }
     os << "]";
     return os;
@@ -29,21 +29,20 @@ class Vecteur {
 
 private:
     std::vector<T> data;
-
-    friend std::ostream &operator<<<T>(std::ostream &os, const Vecteur<T> &v);//Robin
+    friend std::ostream &operator<<<T>(std::ostream &os, const Vecteur<T> &v);
 
 public:
     Vecteur(size_t size);
-    Vecteur(std::vector<T> v);//Robin
+    Vecteur(std::vector<T> v);
     T at(size_t pos) const;
-    size_t size() const;//Robin
+    size_t size() const;
     void resize(size_t newSize);
-    T somme() const;//Robin
+    T somme() const;
     Vecteur operator+(Vecteur otherVecteur);
     Vecteur operator-(Vecteur otherVecteur);
 
     template<typename U>
-    Vecteur operator*(U value);//Robin
+    Vecteur operator*(U value);
     Vecteur operator*(Vecteur otherVecteur);
 };
 
