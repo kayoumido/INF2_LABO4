@@ -2,6 +2,7 @@
 #include "Vecteur.h"
 #include <vector>
 #include <limits>
+#include "Exceptions.h"
 
 using namespace std;
 

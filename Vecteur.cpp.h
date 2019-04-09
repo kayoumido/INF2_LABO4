@@ -6,6 +6,8 @@
 #define LABO4_VECTEUR_CPP_H
 
 #include "Vecteur.h"
+#include "Exceptions.h"
+
 
 template<typename T>
 Vecteur<T>::Vecteur(size_t size) {
@@ -46,11 +48,10 @@ void Vecteur<T>::resize(size_t newSize) {
 template<typename T>
 T Vecteur<T>::somme() const {
     if (data.size() == 0) {
-        std::exception e; //TODO : Créer classe pour ce type d'exception
-        throw e;
+        throw Null_length_error("Impossible de sommer les éléments d'un tableau vide");
     }
 
-    T somme(0);//TODO à tester avec un cas quelconque
+    T somme;//TODO à tester avec un cas quelconque
     for (T elem : data) {
         somme += elem;
     }
@@ -83,7 +84,35 @@ Vecteur<T> Vecteur<T>::operator-(Vecteur otherVecteur) {
     Vecteur<T> _this = *this;
 
     for (size_t i = 0; i < _this.size(); ++i)
-        _this.at(i) -= otherVecteur.at(i);
+    {
+        try
+        {
+            T a=_this.at(i);
+            T b=otherVecteur.at(i);
+            T result = a-b;
+            if(a>=T() and b>=T() and result > T())
+            {
+                throw Overflow("Dépassement de capacité");
+            }
+            
+            if(a>=T() and b<T() and result < T())
+            {
+                throw Overflow("Dépassement de capacité");
+            }
+            
+            if(a<T() and b>=T() and result > T())
+            {
+                throw Overflow("Dépassement de capacité");
+            }
+            
+            _this.at(i) -= otherVecteur.at(i);
+        }
+        
+        catch(std::length_error)
+        {
+            throw;
+        }
+    }
 
     return _this;
 }
@@ -108,11 +137,9 @@ template<typename T>
 template<typename U>
 Vecteur<T> Vecteur<T>::operator*(U value) {
     if (data.size() == 0) {
-        std::exception e; //TODO : Créer classe pour ce type d'exception
-        throw e;
+        throw Null_length_error("Impossible de sommer les éléments d'un tableau vide");
     }
 
-    //TODO : Erreur si tableau vide ?
     for (T elem : data) {
         elem *= value;
     }
