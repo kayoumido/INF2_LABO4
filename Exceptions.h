@@ -9,18 +9,40 @@
 #ifndef Exceptions_h
 #define Exceptions_h
 
-class Null_length_error : public std::length_error
-{
+class NullLength : public std::length_error {
 public:
-    Null_length_error(std::string& what):length_error(what){}
-    Null_length_error(const char* what):length_error(what){}
+    NullLength(std::string &what) : length_error(what) {}
+
+    NullLength(const char *what) : length_error(what) {}
 };
 
-class Overflow : public std::overflow_error
-{
+class ArithmeticLengthError : public std::length_error {
 public:
-    Overflow(std::string& what):overflow_error(what){}
-    Overflow(const char* what):overflow_error(what){}
+    ArithmeticLengthError(std::string &what) : length_error(what) {}
+
+    ArithmeticLengthError(const char *what) : length_error(what) {}
+};
+
+
+class ArithmeticOverflow : public std::overflow_error {
+public:
+    ArithmeticOverflow(std::string &what) : overflow_error(what) {}
+
+    ArithmeticOverflow(const char *what) : overflow_error(what) {}
+};
+
+class SizeMismatch : public std::invalid_argument {
+public:
+    SizeMismatch(std::string &what) : invalid_argument(what) {}
+
+    SizeMismatch(const char *what) : invalid_argument(what) {}
+};
+
+class OutOfBounds : public std::out_of_range {
+public:
+    OutOfBounds(std::string &what) : out_of_range(what) {}
+
+    OutOfBounds(const char *what) : out_of_range(what) {}
 };
 
 #endif /* Exceptions_h */
