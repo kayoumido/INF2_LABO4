@@ -31,7 +31,6 @@ private:
     
 public:
     Matrice();
-    //FIXME : Pertinent de spécifier le type size_t ? on pourrait mettre int et retourner une erreur en cas de nombre négatif plutôt que de le convertir en non signé
     Matrice(size_t l);//Erreur de longueur potentielle
     Matrice(size_t l, size_t c);//Erreur de longueur potentiellle
     Vecteur<T> at(size_t n);//Erreur d'accès potentielle
