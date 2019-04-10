@@ -15,6 +15,8 @@ Vecteur<T>::Vecteur(size_t size) {
         this->data = std::vector<T>(size);
     } catch (const std::bad_alloc &e) {
         throw;
+    } catch (const std::length_error &e) {
+        throw;
     }
 }
 

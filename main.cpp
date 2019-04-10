@@ -1,5 +1,6 @@
 #include <iostream>
 #include "Vecteur.h"
+#include "Matrice.h"
 #include <vector>
 #include <limits>
 #include "Exceptions.h"
@@ -7,9 +8,8 @@
 using namespace std;
 
 int main() {
-    Vecteur<int> v(15);
-
-    v.at(16);
+    vector<int> v(-1);
+    std::cout << v.size() << std::endl;
     std::cout << "Hello, World!" << std::endl;
     return 0;
 }
