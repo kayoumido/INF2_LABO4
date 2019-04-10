@@ -34,6 +34,16 @@ T Vecteur<T>::at(size_t pos) const {
 }
 
 template<typename T>
+T &Vecteur<T>::at(size_t pos) {
+    try {
+        return this->data.at(pos);
+    } catch (const std::out_of_range &e) {
+        std::string msg = "Vecteur::at() - ERROR : Position " + std::to_string(pos) + " is out of bounds";
+        throw OutOfBounds(msg);
+    }
+}
+
+template<typename T>
 void Vecteur<T>::resize(size_t newSize) {
     try {
         this->data.resize(newSize);

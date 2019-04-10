@@ -35,6 +35,8 @@ public:
 
     Vecteur(std::vector<T> v);
 
+    T &at(size_t pos);
+
     T at(size_t pos) const;
 
     size_t size() const;
