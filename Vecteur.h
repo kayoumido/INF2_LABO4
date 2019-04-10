@@ -43,13 +43,13 @@ public:
 
     T somme() const;
 
-    Vecteur operator+(Vecteur otherVecteur);
+    Vecteur operator+(const Vecteur &rhs);
 
-    Vecteur operator-(Vecteur otherVecteur);
+    Vecteur operator-(const Vecteur &rhs);
 
     Vecteur operator*(T value);
 
-    Vecteur operator*(Vecteur otherVecteur);
+    Vecteur operator*(const Vecteur &rhs);
 };
 
 

@@ -55,9 +55,9 @@ T Vecteur<T>::somme() const {
 }
 
 template<typename T>
-Vecteur<T> Vecteur<T>::operator+(Vecteur otherVecteur) {
+Vecteur<T> Vecteur<T>::operator+(const Vecteur &rhs) {
 
-    if (this->size() != otherVecteur.size()) {
+    if (this->size() != rhs.size()) {
         throw SizeMismatch("Vecteur::+() - ERROR : Vecteur sizes don't match");
     }
 
@@ -65,7 +65,7 @@ Vecteur<T> Vecteur<T>::operator+(Vecteur otherVecteur) {
 
     for (size_t i = 0; i < _this.size(); ++i) {
         try {
-            _this.at(i) = add(_this.at(i), otherVecteur.at(i));
+            _this.at(i) = add(_this.at(i), rhs.at(i));
         } catch (const std::length_error &e) {
             throw ArithmeticLengthError("Vecteur::+() - ERROR : Values used for operation caused were to long");
         }
@@ -75,9 +75,9 @@ Vecteur<T> Vecteur<T>::operator+(Vecteur otherVecteur) {
 }
 
 template<typename T>
-Vecteur<T> Vecteur<T>::operator-(Vecteur otherVecteur) {
+Vecteur<T> Vecteur<T>::operator-(const Vecteur &rhs) {
 
-    if (this->size() != otherVecteur.size()) {
+    if (this->size() != rhs.size()) {
         throw SizeMismatch("Vecteur::-() - ERROR : Vecteur sizes don't match");
     }
 
@@ -85,7 +85,7 @@ Vecteur<T> Vecteur<T>::operator-(Vecteur otherVecteur) {
 
     for (size_t i = 0; i < _this.size(); ++i) {
         try {
-            _this.at(i) = subtract(_this.at(i), otherVecteur.at(i));
+            _this.at(i) = subtract(_this.at(i), rhs.at(i));
         }
         catch (const std::length_error &e) {
             throw ArithmeticLengthError("Vecteur::-() - ERROR : Values used for operation caused were to long");
@@ -96,9 +96,9 @@ Vecteur<T> Vecteur<T>::operator-(Vecteur otherVecteur) {
 }
 
 template<typename T>
-Vecteur<T> Vecteur<T>::operator*(Vecteur otherVecteur) {
+Vecteur<T> Vecteur<T>::operator*(const Vecteur &rhs) {
 
-    if (this->size() != otherVecteur.size()) {
+    if (this->size() != rhs.size()) {
         throw SizeMismatch("Vecteur::*() - ERROR : Vecteur sizes don't match");
     }
 
@@ -114,7 +114,7 @@ Vecteur<T> Vecteur<T>::operator*(Vecteur otherVecteur) {
 template<typename T>
 Vecteur<T> Vecteur<T>::operator*(T value) {
     if (data.size() == 0) {
-        throw NullLength("Vecteur::*() - ERROR : Impossible to sum an empty Vecteur");
+        throw NullLength("Vecteur::*() - ERROR : Impossible to multiply an empty Vecteur");
     }
 
     Vecteur<T> _this = *this;
