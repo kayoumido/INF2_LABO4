@@ -3,4 +3,4 @@ project(Labo4)
 
 set(CMAKE_CXX_STANDARD 11)
 
-add_executable(Labo4 main.cpp Vecteur.h Vecteur.cpp.h Matrice.h Matrice.cpp.h)
+add_executable(Labo4 main.cpp Vecteur.h Vecteur.cpp.h Matrice.h Matrice.cpp.h Arithmetic.h)
