@@ -7,6 +7,7 @@
 
 #include "Vecteur.h"
 #include "Exceptions.h"
+#include "Arithmetic.h"
 
 
 template<typename T>
@@ -104,7 +105,7 @@ Vecteur<T> Vecteur<T>::operator*(Vecteur otherVecteur) {
     Vecteur<T> _this = *this;
 
     for (size_t i = 0; i < _this.size(); ++i) {
-        _this.at(i) = this->multiply(_this.at(i), otherVecteur.at(i));
+        _this.at(i) = multiply(this->at(i), rhs.at(i));
     }
 
     return _this;
@@ -124,68 +125,6 @@ Vecteur<T> Vecteur<T>::operator*(T value) {
 
     return _this;
 }
-template<typename T>
-T Vecteur<T>::multiply(T a, T b) {
-    T result = a * b;
 
-    if (((a >= T() and b >= T()) or (a < T() and b < T())) and result < T()) {
-        throw ArithmeticOverflow(
-                "Vecteur::multiply() - ERROR : Operation caused a memory overflow."
-                " a and b were greater or lower than default value but the result was lower"
-        );
-    }
-
-    if (((a < T() and b >= T()) or (a >= T() and b < T())) and result < T()) {
-        throw ArithmeticOverflow(
-                "Vecteur::multiply() - ERROR : Operation caused a memory overflow."
-                "a is greater and b is lower or a is lower and b greater than the default value "
-                "but the result is lower"
-        );
-    }
-
-    return result;
-}
-
-template<typename T>
-T Vecteur<T>::add(T a, T b) {
-    T result = a + b;
-
-    if (a > T() and b > T() and result < T()) {
-        throw ArithmeticOverflow(
-                "Vecteur::+() - ERROR : Operation caused a memory overflow."
-                " a and b were greater than default value but the result was lower"
-        );
-    }
-
-    if (a < T() and b < T() and result > T()) {
-        throw ArithmeticOverflow(
-                "Vecteur::+() - ERROR : Operation caused a memory overflow."
-                " a and b were lower than default value but the result was greater"
-        );
-    }
-
-    return result;
-}
-
-template<typename T>
-T Vecteur<T>::subtract(T a, T b) {
-    T result = a - b;
-
-    if (a >= T() and b < T() and result < T()) {
-        throw ArithmeticOverflow(
-                "Vecteur::-() - ERROR : Operation caused a memory overflow"
-                " a is greater and b is lower than the default value but the result is lower"
-        );
-    }
-
-    if (a < T() and b >= T() and result > T()) {
-        throw ArithmeticOverflow(
-                "Vecteur::-() - ERROR : Operation caused a memory overflow"
-                " a is lower and b is greater than the default value but the result is greater"
-        );
-    }
-
-    return result;
-}
 
 #endif //LABO4_VECTEUR_CPP_H

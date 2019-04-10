@@ -30,10 +30,6 @@ private:
 
     friend std::ostream &operator<<<T>(std::ostream &os, const Vecteur<T> &v);
 
-    T multiply(T a, T b);
-    T add(T a, T b);
-    T subtract(T a, T b);
-
 public:
     Vecteur(size_t size);
 
