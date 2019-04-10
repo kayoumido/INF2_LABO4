@@ -11,16 +11,11 @@
 
 template<typename T>
 Vecteur<T>::Vecteur(size_t size) {
-    try {
-        this->data = std::vector<T>(size);
-    } catch (const std::bad_alloc &e) {
-        throw;
-    }
+    this->data = std::vector<T>(size);
 }
 
 template<typename T>
-Vecteur<T>::Vecteur(std::vector<T> v)
-        :data(v) {}
+Vecteur<T>::Vecteur(std::vector<T> v) : data(v) {}
 
 template<typename T>
 size_t Vecteur<T>::size() const {
@@ -32,7 +27,8 @@ T Vecteur<T>::at(size_t pos) const {
     try {
         return this->data.at(pos);
     } catch (const std::out_of_range &e) {
-        throw;
+        std::string msg = "Vecteur::at() - ERROR : Position " + std::to_string(pos) + " is out of bounds";
+        throw OutOfBounds(msg);
     }
 }
 
@@ -48,12 +44,12 @@ void Vecteur<T>::resize(size_t newSize) {
 template<typename T>
 T Vecteur<T>::somme() const {
     if (data.size() == 0) {
-        throw Null_length_error("Impossible de sommer les éléments d'un tableau vide");
+        throw NullLength("Vecteur::somme() - ERROR : Impossible to sum an empty Vecteur");
     }
 
-    T somme;//TODO à tester avec un cas quelconque
+    T somme = T();
     for (T elem : data) {
-        somme += elem;
+        somme = add(somme, elem);
     }
 }
 
@@ -61,14 +57,18 @@ template<typename T>
 Vecteur<T> Vecteur<T>::operator+(Vecteur otherVecteur) {
 
     if (this->size() != otherVecteur.size()) {
-        // throw exception
-        throw;
+        throw SizeMismatch("Vecteur::+() - ERROR : Vecteur sizes don't match");
     }
 
     Vecteur<T> _this = *this;
 
-    for (size_t i = 0; i < _this.size(); ++i)
-        _this.at(i) += otherVecteur.at(i);
+    for (size_t i = 0; i < _this.size(); ++i) {
+        try {
+            _this.at(i) = add(_this.at(i), otherVecteur.at(i));
+        } catch (const std::length_error &e) {
+            throw ArithmeticLengthError("Vecteur::+() - ERROR : Values used for operation caused were to long");
+        }
+    }
 
     return _this;
 }
@@ -77,40 +77,17 @@ template<typename T>
 Vecteur<T> Vecteur<T>::operator-(Vecteur otherVecteur) {
 
     if (this->size() != otherVecteur.size()) {
-        // throw exception
-        throw;
+        throw SizeMismatch("Vecteur::-() - ERROR : Vecteur sizes don't match");
     }
 
     Vecteur<T> _this = *this;
 
-    for (size_t i = 0; i < _this.size(); ++i)
-    {
-        try
-        {
-            T a=_this.at(i);
-            T b=otherVecteur.at(i);
-            T result = a-b;
-            if(a>=T() and b>=T() and result > T())
-            {
-                throw Overflow("Dépassement de capacité");
-            }
-            
-            if(a>=T() and b<T() and result < T())
-            {
-                throw Overflow("Dépassement de capacité");
-            }
-            
-            if(a<T() and b>=T() and result > T())
-            {
-                throw Overflow("Dépassement de capacité");
-            }
-            
-            _this.at(i) -= otherVecteur.at(i);
+    for (size_t i = 0; i < _this.size(); ++i) {
+        try {
+            _this.at(i) = subtract(_this.at(i), otherVecteur.at(i));
         }
-        
-        catch(std::length_error)
-        {
-            throw;
+        catch (const std::length_error &e) {
+            throw ArithmeticLengthError("Vecteur::-() - ERROR : Values used for operation caused were to long");
         }
     }
 
@@ -121,28 +98,94 @@ template<typename T>
 Vecteur<T> Vecteur<T>::operator*(Vecteur otherVecteur) {
 
     if (this->size() != otherVecteur.size()) {
-        // throw exception
-        throw;
+        throw SizeMismatch("Vecteur::*() - ERROR : Vecteur sizes don't match");
     }
 
     Vecteur<T> _this = *this;
 
-    for (size_t i = 0; i < _this.size(); ++i)
-        _this.at(i) *= otherVecteur.at(i);
+    for (size_t i = 0; i < _this.size(); ++i) {
+        _this.at(i) = this->multiply(_this.at(i), otherVecteur.at(i));
+    }
 
     return _this;
 }
 
 template<typename T>
-template<typename U>
-Vecteur<T> Vecteur<T>::operator*(U value) {
+Vecteur<T> Vecteur<T>::operator*(T value) {
     if (data.size() == 0) {
-        throw Null_length_error("Impossible de sommer les éléments d'un tableau vide");
+        throw NullLength("Vecteur::*() - ERROR : Impossible to sum an empty Vecteur");
     }
 
-    for (T elem : data) {
-        elem *= value;
+    Vecteur<T> _this = *this;
+
+    for (T &elem : _this.data) {
+        elem = multiply(elem, value);
     }
+
+    return _this;
+}
+template<typename T>
+T Vecteur<T>::multiply(T a, T b) {
+    T result = a * b;
+
+    if (((a >= T() and b >= T()) or (a < T() and b < T())) and result < T()) {
+        throw ArithmeticOverflow(
+                "Vecteur::multiply() - ERROR : Operation caused a memory overflow."
+                " a and b were greater or lower than default value but the result was lower"
+        );
+    }
+
+    if (((a < T() and b >= T()) or (a >= T() and b < T())) and result < T()) {
+        throw ArithmeticOverflow(
+                "Vecteur::multiply() - ERROR : Operation caused a memory overflow."
+                "a is greater and b is lower or a is lower and b greater than the default value "
+                "but the result is lower"
+        );
+    }
+
+    return result;
+}
+
+template<typename T>
+T Vecteur<T>::add(T a, T b) {
+    T result = a + b;
+
+    if (a > T() and b > T() and result < T()) {
+        throw ArithmeticOverflow(
+                "Vecteur::+() - ERROR : Operation caused a memory overflow."
+                " a and b were greater than default value but the result was lower"
+        );
+    }
+
+    if (a < T() and b < T() and result > T()) {
+        throw ArithmeticOverflow(
+                "Vecteur::+() - ERROR : Operation caused a memory overflow."
+                " a and b were lower than default value but the result was greater"
+        );
+    }
+
+    return result;
+}
+
+template<typename T>
+T Vecteur<T>::subtract(T a, T b) {
+    T result = a - b;
+
+    if (a >= T() and b < T() and result < T()) {
+        throw ArithmeticOverflow(
+                "Vecteur::-() - ERROR : Operation caused a memory overflow"
+                " a is greater and b is lower than the default value but the result is lower"
+        );
+    }
+
+    if (a < T() and b >= T() and result > T()) {
+        throw ArithmeticOverflow(
+                "Vecteur::-() - ERROR : Operation caused a memory overflow"
+                " a is lower and b is greater than the default value but the result is greater"
+        );
+    }
+
+    return result;
 }
 
 #endif //LABO4_VECTEUR_CPP_H
