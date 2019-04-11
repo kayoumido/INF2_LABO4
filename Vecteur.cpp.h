@@ -84,6 +84,12 @@ Vecteur<T> Vecteur<T>::operator+(const Vecteur &rhs) const{
             _this.at(i) = add(_this.at(i), rhs.at(i));
         } catch (const std::length_error &e) {
             throw ArithmeticLengthError("Vecteur::+() - ERROR : Values used for operation caused were to long");
+        } catch (const ArithmeticOverflow &e) {
+
+            std::string msg = "Vecteur::+() - ";
+            msg += e.what();
+
+            throw ArithmeticOverflow(msg);
         }
     }
 
