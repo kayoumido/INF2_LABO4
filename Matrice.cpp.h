@@ -247,7 +247,6 @@ Matrice<T> Matrice<T>::operator*(T val) const {
 
     Matrice<T> _this(data.size());
 
-//    for (Vecteur<T> &elem : _this.data) {
     for (size_t i = 0; i < _this.data.size(); ++i) {
         try {
             _this.data.at(i) = _this.data.at(i) * val;

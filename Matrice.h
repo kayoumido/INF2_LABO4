@@ -7,6 +7,7 @@
 
 #include "Vecteur.h"
 #include <vector>
+#include <iostream>
 
 template<typename T>
 class Matrice;
@@ -22,8 +23,7 @@ std::ostream &operator<<(std::ostream &os, const Matrice<T> &m) {
 }
 
 template<typename T>
-Matrice<T> operator*(const T& value, const Matrice<T> rhs)
-{
+Matrice<T> operator*(const T& value, const Matrice<T> rhs) {
     return rhs*value;
 }
 

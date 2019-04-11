@@ -14,12 +14,11 @@ class Vecteur;
 template<typename T>
 std::ostream &operator<<(std::ostream &os, const Vecteur<T> &v) {
     os << "[";
-    if(v.size())
-    {
-        os << v.at(0);
-    }    
-    for (size_t i = 1; i < v.size(); i++) {
-        os << ", " << v.at(i);
+
+    for (size_t i = 0; i < v.size(); i++) {
+        if (i) os << ", ";
+
+        os << v.at(i);
     }
     os << "]";
     return os;
