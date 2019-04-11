@@ -37,7 +37,7 @@ Matrice<T>::Matrice(size_t l, size_t c) {
     catch (const std::bad_alloc &e) {
 
     }
-    //TODO : récupérer les erreurs pouvant être jetées par le constructeur de Vecteur
+    //TODO : récupérer les erreurs pouvant être jetées par le constructeur de Vecteur ?
 }
 
 template<typename T>
@@ -79,7 +79,7 @@ void Matrice<T>::resize(size_t l, size_t c) {
     catch (const std::bad_alloc &e) {
         throw;
     }
-    //TODO : récupérer les erreurs pouvant être jetées par le constructeur de Vecteur
+    //TODO : récupérer les erreurs pouvant être jetées par le constructeur de Vecteur ?
 }
 
 template<typename T>
@@ -104,9 +104,14 @@ bool Matrice<T>::estReguliere() {
 template <typename T>
 Vecteur<T> Matrice<T>::sommeLigne()
 {
+    if (data.size() == 0)
+    {
+        throw NullLength("Matrice::sommeLigne() - ERROR : Impossible to sum an empty Matrix");
+    }
     Vecteur<T> vecteurSomme(data.size());
     for(size_t i=0; i<data.size(); ++i)
     {
+        //TODO : catch empty vector error ?
         T somme;
         for (size_t j=0; j<data.at(i).size(); ++j)
         {
@@ -120,6 +125,10 @@ Vecteur<T> Matrice<T>::sommeLigne()
 template <typename T>
 Vecteur<T> Matrice<T>::sommeColonne()
 {
+    if (data.size() == 0)
+    {
+        throw NullLength("Matrice::sommeLigne() - ERROR : Impossible to sum an empty Matrix");
+    }
     Vecteur<T> vecteurSomme(data.at(0).size());
     for(size_t i=0; i<data.at(0).size(); ++i)
     {

@@ -22,6 +22,12 @@ std::ostream &operator<<(std::ostream &os, const Matrice<T> &m) {
 }
 
 template<typename T>
+Matrice<T> operator*(const T& value, const Matrice<T> rhs)
+{
+    return rhs*value;
+}
+
+template<typename T>
 class Matrice {
 private:
     std::vector<Vecteur<T>> data;

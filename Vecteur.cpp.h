@@ -71,7 +71,7 @@ T Vecteur<T>::somme() const {
 }
 
 template<typename T>
-Vecteur<T> Vecteur<T>::operator+(const Vecteur &rhs) {
+Vecteur<T> Vecteur<T>::operator+(const Vecteur &rhs) const{
 
     if (this->size() != rhs.size()) {
         throw SizeMismatch("Vecteur::+() - ERROR : Vecteur sizes don't match");
@@ -91,7 +91,7 @@ Vecteur<T> Vecteur<T>::operator+(const Vecteur &rhs) {
 }
 
 template<typename T>
-Vecteur<T> Vecteur<T>::operator-(const Vecteur &rhs) {
+Vecteur<T> Vecteur<T>::operator-(const Vecteur &rhs) const{
 
     if (this->size() != rhs.size()) {
         throw SizeMismatch("Vecteur::-() - ERROR : Vecteur sizes don't match");
@@ -112,7 +112,7 @@ Vecteur<T> Vecteur<T>::operator-(const Vecteur &rhs) {
 }
 
 template<typename T>
-Vecteur<T> Vecteur<T>::operator*(const Vecteur &rhs) {
+Vecteur<T> Vecteur<T>::operator*(const Vecteur &rhs) const{
 
     if (this->size() != rhs.size()) {
         throw SizeMismatch("Vecteur::*() - ERROR : Vecteur sizes don't match");
@@ -128,7 +128,7 @@ Vecteur<T> Vecteur<T>::operator*(const Vecteur &rhs) {
 }
 
 template<typename T>
-Vecteur<T> Vecteur<T>::operator*(T value) {
+Vecteur<T> Vecteur<T>::operator*(T value) const{
     if (data.size() == 0) {
         throw NullLength("Vecteur::*() - ERROR : Impossible to multiply an empty Vecteur");
     }

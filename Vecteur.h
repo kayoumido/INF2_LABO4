@@ -14,12 +14,21 @@ class Vecteur;
 template<typename T>
 std::ostream &operator<<(std::ostream &os, const Vecteur<T> &v) {
     os << "[";
-    os << v.at(0);
+    if(v.size())
+    {
+        os << v.at(0);
+    }    
     for (size_t i = 1; i < v.size(); i++) {
         os << ", " << v.at(i);
     }
     os << "]";
     return os;
+}
+
+template<typename T>
+Vecteur<T> operator*(const T& value, const Vecteur<T>& rhs)
+{
+    return rhs*value;
 }
 
 template<typename T>
@@ -45,13 +54,13 @@ public:
 
     T somme() const;
 
-    Vecteur operator+(const Vecteur &rhs);
+    Vecteur operator+(const Vecteur &rhs)const;
 
-    Vecteur operator-(const Vecteur &rhs);
+    Vecteur operator-(const Vecteur &rhs)const;
 
-    Vecteur operator*(T value);
+    Vecteur operator*(T value)const;
 
-    Vecteur operator*(const Vecteur &rhs);
+    Vecteur operator*(const Vecteur &rhs)const;
 };
 
 
