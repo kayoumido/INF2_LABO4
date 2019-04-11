@@ -23,6 +23,8 @@ Matrice<T>::Matrice(size_t rows, size_t cols) {
                 "if the number of rows is set to 0"
         );
 
+    this->data(rows);
+
     for (size_t i = 0; i < rows; ++i) {
         this->data.at(i) = Vecteur<T>(cols);
     }
@@ -34,8 +36,9 @@ Vecteur<T> &Matrice<T>::at(size_t pos) {
         return this->data.at(pos);
     }
     catch (const OutOfBounds &e) {
-        std::string msg = "Matrice::at() - ERROR : Position " + std::to_string(pos) +
-                          " is out of bounds";
+        std::string msg = "Matrice::at() - ERROR : Position " + std::to_string(pos) + " is out of bounds\n";
+        msg += e.what();
+
         throw OutOfBounds(msg);
     }
 }
@@ -47,12 +50,12 @@ Vecteur<T> Matrice<T>::at(size_t pos) const {
         return data.at(pos);
     }
     catch (const OutOfBounds &e) {
-        std::string msg = "Matrice::at() - ERROR : Position " + std::to_string(pos) +
-                          " is out of bounds";
+        std::string msg = "Matrice::at() - ERROR : Position " + std::to_string(pos) + " is out of bounds\n";
+        msg += e.what();
+
         throw OutOfBounds(msg);
     }
 }
-
 
 template<typename T>
 size_t Matrice<T>::size() const {
@@ -62,26 +65,50 @@ size_t Matrice<T>::size() const {
 template<typename T>
 void Matrice<T>::resize(size_t l) {
     try {
-        data.resize(l, Vecteur<T>());
-    }
-    catch (const std::length_error &e) {
-        throw;
-    }
-    catch (const std::bad_alloc &e) {
-        throw;
+        this->data.resize(l);
+    } catch (const TooBig &e) {
+
+        std::string msg = "Matrice::resize() - ERROR : Wanted resize exceeds max number of elements\n";
+        msg += e.what();
+
+        throw TooBig(msg);
+    } catch (const OutOfMemory &e) {
+
+        std::string msg = "Matrice::resize() - ERROR : System out of memory, impossible to resize\n";
+        msg += e.what();
+
+        throw OutOfMemory(msg);
     }
 }
 
 template<typename T>
 void Matrice<T>::resize(size_t l, size_t c) {
+
+    if (l == 0 and c)
+        throw SizeMismatch(
+                "Matrice::Matrice(rows, cols) - ERROR : Their can't be a number of cols "
+                "if the number of rows is set to 0"
+        );
+
     try {
-        data.resize(l, Vecteur<T>(c));
-    }
-    catch (const std::length_error &e) {
-        throw;
-    }
-    catch (const std::bad_alloc &e) {
-        throw;
+        data.resize(l);
+
+        for (Vecteur<T> &row : data) {
+            row.resize(c);
+        }
+
+    } catch (const TooBig &e) {
+
+        std::string msg = "Matrice::resize() - ERROR : Wanted resize exceeds max number of elements\n";
+        msg += e.what();
+
+        throw TooBig(msg);
+    } catch (const OutOfMemory &e) {
+
+        std::string msg = "Matrice::resize() - ERROR : System out of memory, impossible to resize\n";
+        msg += e.what();
+
+        throw OutOfMemory(msg);
     }
 }
 
@@ -115,13 +142,16 @@ Vecteur<T> Matrice<T>::sommeLigne() const {
         try {
             result.at(row) = this->data.at(row).somme();
         } catch (const NullLength &e) {
-            std::string msg = "Matrice::sommeLigne() - ERROR : Empty line\n" + e.what();
+            std::string msg = "Matrice::sommeLigne() - ERROR : Empty line\n";
+            msg += e.what();
+
             throw NullLength(msg);
         } catch (const ArithmeticOverflow &e) {
-            std::string msg = "Matrice::sommeLigne() - ERROR : Line n°"
-            std::to_string(row)
-            "caused an overflow\n"
-            + e.what();
+            std::string msg = "Matrice::sommeLigne() - ERROR : Line n°";
+            msg += std::to_string(row);
+            msg += "caused an overflow\n";
+            msg += e.what();
+
             throw ArithmeticOverflow(msg);
         }
     }
@@ -131,8 +161,11 @@ Vecteur<T> Matrice<T>::sommeLigne() const {
 
 template<typename T>
 Vecteur<T> Matrice<T>::sommeColonne() const {
-    if (estVide())
+    if (this->estVide())
         throw NullLength("Matrice::someColonne() - ERROR : Impossible to sum an empty Matrice");
+
+    if (!this->estReguliere())
+        throw SizeMismatch("Matrice::someColonne() - ERROR : Impossible to sum a non regular Matrice");
 
     Vecteur<T> result(this->data.size());
 
@@ -158,6 +191,9 @@ T Matrice<T>::sommeDiagonaleGD() const {
     if (estVide())
         throw NullLength("Matrice::sommeDiagonaleGD() - ERROR : Impossible to sum an empty Matrice");
 
+    if (!this->estCarree())
+        throw SizeMismatch("\"Matrice::sommeDiagonaleGD() - ERROR : Impossible to sum a non square Matrice");
+
     T somme = T();
     for (size_t i = 0; i < this->data.size(); ++i) {
 
@@ -179,6 +215,9 @@ T Matrice<T>::sommeDiagonaleDG() const {
         throw NullLength("Matrice::sommeDiagonaleDG() - ERROR : Impossible to sum an empty Matrice");
 
 
+    if (!this->estCarree())
+        throw SizeMismatch("\"Matrice::sommeDiagonaleDG() - ERROR : Impossible to sum a non square Matrice");
+
     T somme = T();
     for (size_t i = 0; i < data.size(); ++i) {
         try {
@@ -196,15 +235,15 @@ T Matrice<T>::sommeDiagonaleDG() const {
 template<typename T>
 Matrice<T> Matrice<T>::operator*(T val) const {
     if (estVide())
-        throw NullLength("Matrice::*() - ERROR : Impossible to sum an empty Matrice");
+        throw NullLength("Matrice::*() - ERROR : Impossible to multiply an empty Matrice");
 
     Matrice<T> _this(data.size());
 
-    for (T &elem : _this.data) {
+    for (Vecteur<T> &elem : _this.data) {
         try {
             elem = elem * val;
         } catch (const ArithmeticOverflow &e) {
-            std::string msg = "Matrice::*() - ";
+            std::string msg = "Matrice::*() - Overflow happened.\n";
             msg += e.what();
 
             throw ArithmeticOverflow(msg);
@@ -216,6 +255,10 @@ Matrice<T> Matrice<T>::operator*(T val) const {
 
 template<typename T>
 Matrice<T> Matrice<T>::operator*(const Matrice &rhs) const {
+    if (this->estVide() || rhs.estVide())
+        throw NullLength(
+                "Matrice::*() - ERROR : Impossible too multiply when one or more of the Matrices are empty"
+        );
 
     if (this->size() != rhs.size()) {
         throw SizeMismatch("Matrice::*() - ERROR : Matrice sizes don't match");
@@ -232,6 +275,11 @@ Matrice<T> Matrice<T>::operator*(const Matrice &rhs) const {
             msg += e.what();
 
             throw ArithmeticOverflow(msg);
+        } catch (const SizeMismatch &e) {
+            std::string msg = "Matrice::*() - ERROR : Impossible to sum with different number of columns\n";
+            msg += e.what();
+
+            throw SizeMismatch(msg);
         }
     }
     return _this;
@@ -240,10 +288,13 @@ Matrice<T> Matrice<T>::operator*(const Matrice &rhs) const {
 template<typename T>
 Matrice<T> Matrice<T>::operator+(const Matrice &rhs) const {
 
+    if (this->estVide() || rhs.estVide())
+        throw NullLength(
+                "Matrice::+() - ERROR : Impossible too add when one or more of the Matrices are empty"
+        );
 
-    if (this->size() != rhs.size()) {
+    if (this->size() != rhs.size())
         throw SizeMismatch("Matrice::+() - ERROR : Matrice sizes don't match");
-    }
 
     Matrice<T> _this = *this;
 
@@ -252,10 +303,15 @@ Matrice<T> Matrice<T>::operator+(const Matrice &rhs) const {
         try {
             _this.at(i) = _this.at(i) + rhs.at(i);
         } catch (const ArithmeticOverflow &e) {
-            std::string msg = "Matrice::*() - ERROR : Overflow happened.\n";
+            std::string msg = "Matrice::+() - ERROR : Overflow happened.\n";
             msg += e.what();
 
             throw ArithmeticOverflow(msg);
+        } catch (const SizeMismatch &e) {
+            std::string msg = "Matrice::+() - ERROR : Impossible to sum with different number of columns\n";
+            msg += e.what();
+
+            throw SizeMismatch(msg);
         }
     }
     return _this;
