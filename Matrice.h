@@ -40,13 +40,13 @@ public:
     bool estVide();
     bool estCarree();//Une matrice carrée est-elle forcément régulière ?
     bool estReguliere();
-    Vecteur<T> sommeLigne();//Erreur à jeter pour matrice de taille nulle ?
-    Vecteur<T> sommeColonne();//Erreur à jeter pour matrice de taille nulle ?
+    Vecteur<T> sommeLigne();//Erreur à jeter pour matrice de taille nulle ? Non régulière ?
+    Vecteur<T> sommeColonne();//Erreur à jeter pour matrice de taille nulle ? Non régulière ?
     T sommeDiagonaleGD();//Erreur d'accès à jeter pour matrice de taille nulle ? Ou non carrée ?
     T sommeDiagonaleDG();//Erreur d'accès à jeter pour matrice de taille nulle ? Ou non carrée ?
     Matrice operator*(T val);//Erreur pour matrice de taille nulle ?
-    Matrice operator*(Matrice otherMatrice);//Erreur pour matrice de taille nulle ?
-    Matrice operator+(Matrice otherMatrice);//Erreur pour matrice de taille nulle ?
+    Matrice operator*(Matrice otherMatrice);//Erreur pour matrice de taille nulle ? //Erreur pour matrices de tailles inégales
+    Matrice operator+(Matrice otherMatrice);//Erreur pour matrice de taille nulle ? //Erreur pour matrices de tailles inégales
 };
 
 #include "Matrice.cpp.h"

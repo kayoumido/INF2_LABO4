@@ -129,43 +129,90 @@ bool Matrice<T>::estReguliere()
 template <typename T>
 Vecteur<T> Matrice<T>::sommeLigne()
 {
-    
+    Vecteur<T> vecteurSomme(data.size());
+    for(size_t i=0; i<data.size(); ++i)
+    {
+        T somme;
+        for (size_t j=0; j<data.at(i).size(); ++j)
+        {
+            somme += data.at(i).at(j);
+        }
+        vecteurSomme.at(i) = somme;
+    }
+    return vecteurSomme;
 }
 
 template <typename T>
 Vecteur<T> Matrice<T>::sommeColonne()
 {
-    
+    Vecteur<T> vecteurSomme(data.at(0).size());
+    for(size_t i=0; i<data.at(0).size(); ++i)
+    {
+        T somme;
+        for(size_t j=0; j<data.size(); ++j)
+        {
+            somme += data.at(j).at(i);
+        }
+        vecteurSomme.at(i) = somme;
+    }
+    return vecteurSomme;
 }
 
 template <typename T>
 T Matrice<T>::sommeDiagonaleGD()
 {
-    
+    T somme;
+    for (size_t i=0; i<data.size(); ++i)
+    {
+        somme += data.at(i).at(i);
+    }
+    return somme;
 }
 
 template <typename T>
 T Matrice<T>::sommeDiagonaleDG()
 {
-    
+    T somme;
+    for (size_t i=0; i<data.size(); ++i)
+    {
+        somme += data.at(data.size()-i-1).at(i);
+    }
+    return somme;
 }
 
 template <typename T>
 Matrice<T> Matrice<T>::operator*(T val)
 {
-    
+    Matrice<T> produit(data.size());
+    for(size_t i=0; i<data.size(); ++i)
+    {
+        produit.at(i) = data.at(i)*val;
+    }
+    return produit;
 }
 
 template <typename T>
 Matrice<T> Matrice<T>::operator*(Matrice otherMatrice)
 {
-    
+    Matrice<T> MatriceProduit;
+    for(size_t i=0; i<data.size(); ++i)
+    {
+        Vecteur<T> VecteurProduit = data.at(i)*otherMatrice.at(i);
+        MatriceProduit.at(i) = VecteurProduit;
+    }
+    return MatriceProduit;
 }
 
 template <typename T>
 Matrice<T> Matrice<T>::operator+(Matrice otherMatrice)
 {
-    
+    Matrice<T> MatriceSomme;
+    for(size_t i=0; i<data.size(); ++i)
+    {
+        Vecteur<T> VecteurSomme = data.at(i)+otherMatrice.at(i);
+        MatriceSomme.at(i) = VecteurSomme;
+    }
+    return MatriceSomme;
 }
 
 #endif //LABO4_MATRICE_CPP_H
