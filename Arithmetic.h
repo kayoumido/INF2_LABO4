@@ -51,7 +51,7 @@ T add(T a, T b) {
 }
 
 template<typename T>
-T ubtract(T a, T b) {
+T subtract(T a, T b) {
     T result = a - b;
 
     if (a >= T() and b < T() and result < T()) {
