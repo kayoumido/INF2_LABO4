@@ -7,14 +7,22 @@
 
 #include "Vecteur.h"
 #include "Exceptions.h"
-#include "Arithmetic.h"
 
 
 template<typename T>
-Vecteur<T>::Vecteur(size_t size) : data(size) {}
+Vecteur<T>::Vecteur(size_t size) {
+    try {
+        this->data = std::vector<T>(size);
+    } catch (const std::bad_alloc &e) {
+        throw;
+    } catch (const std::length_error &e) {
+        throw;
+    }
+}
 
 template<typename T>
-Vecteur<T>::Vecteur(std::vector<T> v) : data(v) {}
+Vecteur<T>::Vecteur(std::vector<T> v)
+        :data(v) {}
 
 template<typename T>
 size_t Vecteur<T>::size() const {
