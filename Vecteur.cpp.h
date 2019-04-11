@@ -11,9 +11,7 @@
 
 
 template<typename T>
-Vecteur<T>::Vecteur(size_t size) {
-    this->data = std::vector<T>(size);
-}
+Vecteur<T>::Vecteur(size_t size) : data(size) {}
 
 template<typename T>
 Vecteur<T>::Vecteur(std::vector<T> v) : data(v) {}
