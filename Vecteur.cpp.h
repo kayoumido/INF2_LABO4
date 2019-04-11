@@ -10,19 +10,10 @@
 
 
 template<typename T>
-Vecteur<T>::Vecteur(size_t size) {
-    try {
-        this->data = std::vector<T>(size);
-    } catch (const std::bad_alloc &e) {
-        throw;
-    } catch (const std::length_error &e) {
-        throw;
-    }
-}
+Vecteur<T>::Vecteur(size_t size) : data(std::vector<T>(size)) {}
 
 template<typename T>
-Vecteur<T>::Vecteur(std::vector<T> v)
-        :data(v) {}
+Vecteur<T>::Vecteur(std::vector<T> v) : data(v) {}
 
 template<typename T>
 size_t Vecteur<T>::size() const {
@@ -54,7 +45,9 @@ void Vecteur<T>::resize(size_t newSize) {
     try {
         this->data.resize(newSize);
     } catch (const std::length_error &e) {
-        throw;
+        throw TooBig("Vecteur::resize() - ERROR : Wanted new size exceeds the maximum element a std::vector can store");
+    } catch (const std::bad_alloc &e) {
+        throw OutOfMemory("Vecteur::resize() - ERROR : System out of memory, impossible to resize");
     }
 }
 
@@ -66,7 +59,15 @@ T Vecteur<T>::somme() const {
 
     T somme = T();
     for (T elem : data) {
-        somme = add(somme, elem);
+        try {
+            somme = add(somme, elem);
+        } catch (const ArithmeticOverflow &e) {
+            std::string msg = "Vecteur::somme() - ";
+            msg += e.what();
+
+            throw ArithmeticOverflow(msg);
+        }
+
     }
 }
 
@@ -111,6 +112,12 @@ Vecteur<T> Vecteur<T>::operator-(const Vecteur &rhs) {
         }
         catch (const std::length_error &e) {
             throw ArithmeticLengthError("Vecteur::-() - ERROR : Values used for operation caused were to long");
+        } catch (const ArithmeticOverflow &e) {
+
+            std::string msg = "Vecteur::-() - ";
+            msg += e.what();
+
+            throw ArithmeticOverflow(msg);
         }
     }
 
@@ -127,7 +134,15 @@ Vecteur<T> Vecteur<T>::operator*(const Vecteur &rhs) {
     Vecteur<T> _this = *this;
 
     for (size_t i = 0; i < _this.size(); ++i) {
-        _this.at(i) = multiply(this->at(i), rhs.at(i));
+        try {
+            _this.at(i) = multiply(this->at(i), rhs.at(i));
+        } catch (const ArithmeticOverflow &e) {
+
+            std::string msg = "Vecteur::*(Vecteur) - ";
+            msg += e.what();
+
+            throw ArithmeticOverflow(msg);
+        }
     }
 
     return _this;
@@ -142,11 +157,18 @@ Vecteur<T> Vecteur<T>::operator*(T value) {
     Vecteur<T> _this = *this;
 
     for (T &elem : _this.data) {
-        elem = multiply(elem, value);
+        try {
+            elem = multiply(elem, value);
+        } catch (const ArithmeticOverflow &e) {
+
+            std::string msg = "Vecteur::*(size) - ";
+            msg += e.what();
+
+            throw ArithmeticOverflow(msg);
+        }
     }
 
     return _this;
 }
-
 
 #endif //LABO4_VECTEUR_CPP_H
