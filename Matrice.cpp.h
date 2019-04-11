@@ -148,7 +148,6 @@ Vecteur<T> Matrice<T>::sommeColonne() const {
                 throw ArithmeticOverflow(msg);
             }
         }
-
     }
 
     return result;
@@ -156,54 +155,110 @@ Vecteur<T> Matrice<T>::sommeColonne() const {
 
 template<typename T>
 T Matrice<T>::sommeDiagonaleGD() const {
+    if (estVide())
+        throw NullLength("Matrice::sommeDiagonaleGD() - ERROR : Impossible to sum an empty Matrice");
 
-    T somme;
-    for (size_t i = 0; i < data.size(); ++i) {
-        somme += data.at(i).at(i);
+    T somme = T();
+    for (size_t i = 0; i < this->data.size(); ++i) {
+
+        try {
+            somme = add(somme, this->data.at(i).at(i));
+        } catch (const ArithmeticOverflow &e) {
+            std::string msg = "Matrice::sommeDiagonaleGD() - ";
+            msg += e.what();
+
+            throw ArithmeticOverflow(msg);
+        }
     }
     return somme;
 }
 
 template<typename T>
 T Matrice<T>::sommeDiagonaleDG() const {
+    if (estVide())
+        throw NullLength("Matrice::sommeDiagonaleDG() - ERROR : Impossible to sum an empty Matrice");
 
-    T somme;
+
+    T somme = T();
     for (size_t i = 0; i < data.size(); ++i) {
-        somme += data.at(data.size() - i - 1).at(i);
+        try {
+            somme = add(somme, this->data.at(this->data.size() - i - 1).at(i));
+        } catch (const ArithmeticOverflow &e) {
+            std::string msg = "Matrice::sommeDiagonaleDG() - ";
+            msg += e.what();
+
+            throw ArithmeticOverflow(msg);
+        }
     }
     return somme;
 }
 
 template<typename T>
 Matrice<T> Matrice<T>::operator*(T val) const {
+    if (estVide())
+        throw NullLength("Matrice::*() - ERROR : Impossible to sum an empty Matrice");
 
-    Matrice<T> produit(data.size());
-    for (size_t i = 0; i < data.size(); ++i) {
-        produit.at(i) = data.at(i) * val;
+    Matrice<T> _this(data.size());
+
+    for (T &elem : _this.data) {
+        try {
+            elem = elem * val;
+        } catch (const ArithmeticOverflow &e) {
+            std::string msg = "Matrice::*() - ";
+            msg += e.what();
+
+            throw ArithmeticOverflow(msg);
+        }
     }
-    return produit;
+
+    return _this;
 }
 
 template<typename T>
 Matrice<T> Matrice<T>::operator*(const Matrice &rhs) const {
 
-    Matrice<T> MatriceProduit;
-    for (size_t i = 0; i < data.size(); ++i) {
-        Vecteur<T> VecteurProduit = data.at(i) * otherMatrice.at(i);
-        MatriceProduit.at(i) = VecteurProduit;
+    if (this->size() != rhs.size()) {
+        throw SizeMismatch("Matrice::*() - ERROR : Matrice sizes don't match");
     }
-    return MatriceProduit;
+
+    Matrice<T> _this = *this;
+
+    for (size_t i = 0; i < _this.size(); ++i) {
+
+        try {
+            _this.at(i) = _this.at(i) * rhs.at(i);
+        } catch (const ArithmeticOverflow &e) {
+            std::string msg = "Matrice::*() - ERROR : Overflow happened.\n";
+            msg += e.what();
+
+            throw ArithmeticOverflow(msg);
+        }
+    }
+    return _this;
 }
 
 template<typename T>
 Matrice<T> Matrice<T>::operator+(const Matrice &rhs) const {
 
-    Matrice<T> MatriceSomme;
-    for (size_t i = 0; i < data.size(); ++i) {
-        Vecteur<T> VecteurSomme = data.at(i) + otherMatrice.at(i);
-        MatriceSomme.at(i) = VecteurSomme;
+
+    if (this->size() != rhs.size()) {
+        throw SizeMismatch("Matrice::+() - ERROR : Matrice sizes don't match");
     }
-    return MatriceSomme;
+
+    Matrice<T> _this = *this;
+
+    for (size_t i = 0; i < _this.size(); ++i) {
+
+        try {
+            _this.at(i) = _this.at(i) + rhs.at(i);
+        } catch (const ArithmeticOverflow &e) {
+            std::string msg = "Matrice::*() - ERROR : Overflow happened.\n";
+            msg += e.what();
+
+            throw ArithmeticOverflow(msg);
+        }
+    }
+    return _this;
 }
 
 #endif //LABO4_MATRICE_CPP_H
