@@ -23,7 +23,6 @@ Vecteur<T>::Vecteur(size_t size) {
 template<typename T>
 Vecteur<T>::Vecteur(std::vector<T> v)
         :data(v) {}
-        :data(v) {}
 
 template<typename T>
 size_t Vecteur<T>::size() const {
