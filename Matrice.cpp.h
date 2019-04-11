@@ -23,7 +23,7 @@ Matrice<T>::Matrice(size_t rows, size_t cols) {
                 "if the number of rows is set to 0"
         );
 
-    this->data(rows);
+    this->data = rows;
 
     for (size_t i = 0; i < rows; ++i) {
         this->data.at(i) = Vecteur<T>(cols);
@@ -93,8 +93,8 @@ void Matrice<T>::resize(size_t l, size_t c) {
     try {
         data.resize(l);
 
-        for (Vecteur<T> &row : data) {
-            row.resize(c);
+        for (size_t i = 0; i < this->data.size(); ++i) {
+            this->data.at(i).resize(c);
         }
 
     } catch (const TooBig &e) {
@@ -118,8 +118,8 @@ bool Matrice<T>::estVide() const {
 
     if (!this->size()) return true;
 
-    for (Vecteur<T> row : this->data) {
-        if (row.size()) return false;
+    for (size_t i = 0; i < this->data.size(); ++i) {
+        if (this->data.at(i).size()) return false;
     }
 
     return true;
@@ -247,9 +247,10 @@ Matrice<T> Matrice<T>::operator*(T val) const {
 
     Matrice<T> _this(data.size());
 
-    for (Vecteur<T> &elem : _this.data) {
+//    for (Vecteur<T> &elem : _this.data) {
+    for (size_t i = 0; i < _this.data.size(); ++i) {
         try {
-            elem = elem * val;
+            _this.data.at(i) = _this.data.at(i) * val;
         } catch (const ArithmeticOverflow &e) {
             std::string msg = "Matrice::*() - Overflow happened.\n";
             msg += e.what();

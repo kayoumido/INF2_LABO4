@@ -7,7 +7,7 @@
 
 #include "Vecteur.h"
 #include "Exceptions.h"
-
+#include "Arithmetic.h"
 
 template<typename T>
 Vecteur<T>::Vecteur(size_t size) {
