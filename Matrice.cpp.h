@@ -35,7 +35,7 @@ Vecteur<T> &Matrice<T>::at(size_t pos) {
     }
     catch (const OutOfBounds &e) {
         std::string msg = "Matrice::at() - ERROR : Position " + std::to_string(pos) +
-                          " is out of bounds\n" + e.what();
+                          " is out of bounds";
         throw OutOfBounds(msg);
     }
 }
@@ -48,7 +48,7 @@ Vecteur<T> Matrice<T>::at(size_t pos) const {
     }
     catch (const OutOfBounds &e) {
         std::string msg = "Matrice::at() - ERROR : Position " + std::to_string(pos) +
-                          " is out of bounds\n" + e.what();
+                          " is out of bounds";
         throw OutOfBounds(msg);
     }
 }
