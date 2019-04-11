@@ -114,7 +114,14 @@ void Matrice<T>::resize(size_t l, size_t c) {
 
 template<typename T>
 bool Matrice<T>::estVide() const {
-    return data.empty();
+
+    if (!this->size()) return true;
+
+    for (Vecteur<T> row : this->data) {
+        if (row.size()) return false;
+    }
+
+    return true;
 }
 
 template<typename T>
