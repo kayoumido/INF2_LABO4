@@ -40,6 +40,9 @@ private:
     friend std::ostream &operator<<<T>(std::ostream &os, const Vecteur<T> &v);
 
 public:
+
+    Vecteur() = default;
+
     Vecteur(size_t size);
 
     Vecteur(std::vector<T> v);
