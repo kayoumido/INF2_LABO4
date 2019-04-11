@@ -114,12 +114,14 @@ Vecteur<T> Matrice<T>::sommeLigne() const {
     for (size_t row = 0; row < this->data.size(); ++row) {
         try {
             result.at(row) = this->data.at(row).somme();
-        } catch(const NullLength &e) {
+        } catch (const NullLength &e) {
             std::string msg = "Matrice::sommeLigne() - ERROR : Empty line\n" + e.what();
             throw NullLength(msg);
         } catch (const ArithmeticOverflow &e) {
-            std::string msg = "Matrice::sommeLigne() - ERROR : Line n°" std::to_string(row) "caused an overflow\n"
-                            + e.what();
+            std::string msg = "Matrice::sommeLigne() - ERROR : Line n°"
+            std::to_string(row)
+            "caused an overflow\n"
+            + e.what();
             throw ArithmeticOverflow(msg);
         }
     }
@@ -156,8 +158,7 @@ template<typename T>
 T Matrice<T>::sommeDiagonaleGD() const {
 
     T somme;
-    for (size_t i=0; i<data.size(); ++i)
-    {
+    for (size_t i = 0; i < data.size(); ++i) {
         somme += data.at(i).at(i);
     }
     return somme;
@@ -167,9 +168,8 @@ template<typename T>
 T Matrice<T>::sommeDiagonaleDG() const {
 
     T somme;
-    for (size_t i=0; i<data.size(); ++i)
-    {
-        somme += data.at(data.size()-i-1).at(i);
+    for (size_t i = 0; i < data.size(); ++i) {
+        somme += data.at(data.size() - i - 1).at(i);
     }
     return somme;
 }
@@ -178,9 +178,8 @@ template<typename T>
 Matrice<T> Matrice<T>::operator*(T val) const {
 
     Matrice<T> produit(data.size());
-    for(size_t i=0; i<data.size(); ++i)
-    {
-        produit.at(i) = data.at(i)*val;
+    for (size_t i = 0; i < data.size(); ++i) {
+        produit.at(i) = data.at(i) * val;
     }
     return produit;
 }
@@ -189,9 +188,8 @@ template<typename T>
 Matrice<T> Matrice<T>::operator*(const Matrice &rhs) const {
 
     Matrice<T> MatriceProduit;
-    for(size_t i=0; i<data.size(); ++i)
-    {
-        Vecteur<T> VecteurProduit = data.at(i)*otherMatrice.at(i);
+    for (size_t i = 0; i < data.size(); ++i) {
+        Vecteur<T> VecteurProduit = data.at(i) * otherMatrice.at(i);
         MatriceProduit.at(i) = VecteurProduit;
     }
     return MatriceProduit;
@@ -201,9 +199,8 @@ template<typename T>
 Matrice<T> Matrice<T>::operator+(const Matrice &rhs) const {
 
     Matrice<T> MatriceSomme;
-    for(size_t i=0; i<data.size(); ++i)
-    {
-        Vecteur<T> VecteurSomme = data.at(i)+otherMatrice.at(i);
+    for (size_t i = 0; i < data.size(); ++i) {
+        Vecteur<T> VecteurSomme = data.at(i) + otherMatrice.at(i);
         MatriceSomme.at(i) = VecteurSomme;
     }
     return MatriceSomme;
