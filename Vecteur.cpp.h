@@ -10,7 +10,16 @@
 
 
 template<typename T>
-Vecteur<T>::Vecteur(size_t size) : data(std::vector<T>(size)) {}
+Vecteur<T>::Vecteur(size_t size) {
+
+    try {
+        this->data = std::vector<T>(size);
+    } catch (const std::length_error &e) {
+        throw TooBig("Vecteur::Vecteur(size) - ERROR : Wanted resize exceeds the maximum element a std::vector can store");
+    } catch (const std::bad_alloc &e) {
+        throw OutOfMemory("Vecteur::Vecteur(size) - ERROR : System out of memory, impossible to resize");
+    }
+}
 
 template<typename T>
 Vecteur<T>::Vecteur(std::vector<T> v) : data(v) {}
@@ -45,7 +54,7 @@ void Vecteur<T>::resize(size_t newSize) {
     try {
         this->data.resize(newSize);
     } catch (const std::length_error &e) {
-        throw TooBig("Vecteur::resize() - ERROR : Wanted new size exceeds the maximum element a std::vector can store");
+        throw TooBig("Vecteur::resize() - ERROR : Wanted resize exceeds the maximum element a std::vector can store");
     } catch (const std::bad_alloc &e) {
         throw OutOfMemory("Vecteur::resize() - ERROR : System out of memory, impossible to resize");
     }
